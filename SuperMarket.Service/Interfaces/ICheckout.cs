@@ -2,7 +2,7 @@ namespace SuperMarket.Service.Interfaces
 {
     public interface ICheckout
     {
-        void ScanItem(char item);
+        void ScanItem(string item);
         decimal CalculateTotalPrice();
     }
 }

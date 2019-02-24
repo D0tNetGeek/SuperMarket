@@ -6,16 +6,16 @@ namespace SuperMarket.Rules.ItemPriceRules
 {
     public class SingleItemPriceRule : IItemPriceRule
     {
-        private readonly char _itemSku;
+        private readonly string _itemSku;
         private readonly decimal _itemPrice;
 
-        public SingleItemPriceRule(char itemSku, decimal itemPrice)
+        public SingleItemPriceRule(string itemSku, decimal itemPrice)
         {
             _itemSku = itemSku;
             _itemPrice = itemPrice;
         }
 
-        public decimal CalculatePrice(List<char> itemsLeft)
+        public decimal CalculatePrice(List<string> itemsLeft)
         {
             decimal itemCount = itemsLeft.Count(x => x == _itemSku);
 

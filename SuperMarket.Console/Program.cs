@@ -1,4 +1,5 @@
 ﻿using System;
+using SuperMarket.Service.Factory;
 
 namespace SuperMarket.Console
 {
@@ -6,7 +7,7 @@ namespace SuperMarket.Console
     {
         static void Main(string[] args)
         {
-            System.Console.WriteLine("Hello World!");
+           
         }
     }
 }

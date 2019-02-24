@@ -9,10 +9,11 @@ namespace SuperMarket.Rules.Factory
     {
         public IReadOnlyList<IItemPriceRule> GetAllItemPriceRules()
         {
-            var rules = new List<IItemPriceRule>();
-
-            rules.Add(CreateThreeAItemPriceRule());
-            rules.Add(CreateTwoBItemPriceRule());
+            var rules = new List<IItemPriceRule>
+            {
+                CreateThreeAItemPriceRule(),
+                CreateTwoBItemPriceRule()
+            };
 
             rules.AddRange(CreateSingleItemPriceRules());
 
@@ -26,19 +27,19 @@ namespace SuperMarket.Rules.Factory
 
         private IItemPriceRule CreateThreeAItemPriceRule()
         {
-            return new MultipleItemPriceRule('A', 130m, 3);
+            return new MultipleItemPriceRule("A99", 1.30m, 3);
         }
 
         private IItemPriceRule CreateTwoBItemPriceRule()
         {
-            return new MultipleItemPriceRule('B', 45m, 2);
+            return new MultipleItemPriceRule("B15", 0.45m, 2);
         }
 
-        private static readonly IReadOnlyDictionary<char, decimal> ItemCodePriceMap = new Dictionary<char, decimal>(){
-            {'A', 50m},
-            {'B', 30m},
-            {'C', 20m},
-            {'D', 15m}
+        private static readonly IReadOnlyDictionary<string, decimal> ItemCodePriceMap = new Dictionary<string, decimal>(){
+            {"A99", 0.50m},
+            {"B15", 0.30m},
+            {"C40", 1.80m},
+            {"T23", 0.99m}
         };
     }
 }

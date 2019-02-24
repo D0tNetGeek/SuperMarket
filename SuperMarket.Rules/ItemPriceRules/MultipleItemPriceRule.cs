@@ -4,20 +4,20 @@ using SuperMarket.Rules.Interfaces;
 
 namespace SuperMarket.Rules.ItemPriceRules
 {
-    public class MultipleItemPriceRule:IItemPriceRule
+    public class MultipleItemPriceRule : IItemPriceRule
     {
-        private readonly char _itemSku;
+        private readonly string _itemSku;
         private readonly decimal _itemBundlePrice;
         private readonly decimal _itemsInBundle;
 
-        public MultipleItemPriceRule(char itemSku, decimal itemBundlePrice, decimal itemsInBundle)
+        public MultipleItemPriceRule(string itemSku, decimal itemBundlePrice, decimal itemsInBundle)
         {
             _itemSku = itemSku;
             _itemBundlePrice = itemBundlePrice;
             _itemsInBundle = itemsInBundle;
         }
 
-        public decimal CalculatePrice(List<char> itemsLeft)
+        public decimal CalculatePrice(List<string> itemsLeft)
         {
             var itemCount = itemsLeft.Count(x => x == _itemSku);
 
@@ -25,7 +25,7 @@ namespace SuperMarket.Rules.ItemPriceRules
 
             var bundledItems = itemBundles * _itemsInBundle;
 
-            for (int i=0; i< bundledItems;i++)
+            for (int i = 0; i < bundledItems; i++)
             {
                 itemsLeft.Remove(_itemSku);
             }
