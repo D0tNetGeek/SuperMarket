@@ -1,3 +1,6 @@
+using SuperMarket.Rules.Factory;
+using SuperMarket.Service.Interfaces;
+
 namespace SuperMarket.Service.Factory
 {
     public class CheckoutFactory

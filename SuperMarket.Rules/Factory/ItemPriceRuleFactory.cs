@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
+using SuperMarket.Rules.Interfaces;
+using SuperMarket.Rules.ItemPriceRules;
 
 namespace SuperMarket.Rules.Factory
 {
@@ -23,7 +26,7 @@ namespace SuperMarket.Rules.Factory
 
         private IItemPriceRule CreateThreeAItemPriceRule()
         {
-            return MultipleItemPriceRule('A', 130m, 3);
+            return new MultipleItemPriceRule('A', 130m, 3);
         }
 
         private IItemPriceRule CreateTwoBItemPriceRule()

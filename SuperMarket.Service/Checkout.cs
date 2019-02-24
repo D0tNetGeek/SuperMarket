@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SuperMarket.Rules.Interfaces;
 using SuperMarket.Service.Interfaces;
 
 namespace SuperMarket.Service
