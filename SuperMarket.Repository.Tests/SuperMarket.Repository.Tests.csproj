@@ -8,13 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.0" />
-    <PackageReference Include="Moq" Version="4.10.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SuperMarket.Service\SuperMarket.Service.csproj" />
+    <ProjectReference Include="..\SuperMarket.Repository\SuperMarket.Repository.csproj" />
   </ItemGroup>
 
 </Project>

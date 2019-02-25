@@ -78,7 +78,11 @@ namespace SuperMarket.Console
 
                         var totalPrice = checkoutService.CalculateTotalPrice();
 
-                        System.Console.WriteLine("\t\t\tItems in the basket : " + string.Join(", ", checkoutService.BasketItems()));
+                        var basketItems = checkoutService.BasketItems().Count > 0
+                            ? string.Join(", ", checkoutService.BasketItems())
+                            : "No items purchased";
+
+                        System.Console.WriteLine("\t\t\tItems in the basket : " + basketItems);
 
                         System.Console.WriteLine("\t\t\tThe Total Price for the Basket is: " + totalPrice);
 
