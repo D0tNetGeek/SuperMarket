@@ -22,7 +22,7 @@ namespace SuperMarket.Service.Tests.CheckoutFactory
         {
             _repo = new Mock<ISuperMarketData>();
             _itemPriceRuleFactory = new Mock<IItemPriceRuleFactory>();
-            _factory = new Factory.CheckoutFactory(_itemPriceRuleFactory.Object, _repo.Object);
+            //_factory = new Factory.CheckoutFactory(_itemPriceRuleFactory.Object, _repo.Object);
 
             _service = new Factory.CheckoutFactory(_itemPriceRuleFactory.Object, _repo.Object);
 
