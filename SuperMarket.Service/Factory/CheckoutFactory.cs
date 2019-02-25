@@ -1,24 +1,28 @@
-using SuperMarket.Rules.Factory;
+using System.Collections.Generic;
+using System.Linq;
+using SuperMarket.Rules.Interfaces;
 using SuperMarket.Service.Interfaces;
 
 namespace SuperMarket.Service.Factory
 {
-    public class CheckoutFactory
+    public class CheckoutFactory : ICheckoutFactory
     {
-        private readonly ItemPriceRuleFactory _itemPriceRuleFactory;
+        private readonly IItemPriceRuleFactory _itemPriceRuleFactory;
 
-        public CheckoutFactory(ItemPriceRuleFactory itemPriceRuleFactory)
+        public CheckoutFactory(IItemPriceRuleFactory itemPriceRuleFactory)
         {
             _itemPriceRuleFactory = itemPriceRuleFactory;
         }
 
-        public ICheckout CreateCheckout()
+        public List<IItemPriceRule> CreateCheckout()
         {
             var itemPriceRules = _itemPriceRuleFactory.GetAllItemPriceRules();
 
-            var checkout = new Checkout(itemPriceRules);
+            //var checkout = new Checkout(itemPriceRules);
 
-            return checkout;
+            //return checkout;
+
+            return itemPriceRules.ToList();
         }
     }
 }

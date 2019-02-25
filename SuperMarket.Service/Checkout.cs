@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SuperMarket.Rules.Interfaces;
+using SuperMarket.Service.Entities;
 using SuperMarket.Service.Interfaces;
 
 namespace SuperMarket.Service
@@ -11,15 +13,60 @@ namespace SuperMarket.Service
 
         private readonly List<string> _scannedItems;
 
-        public Checkout(IEnumerable<IItemPriceRule> itemPriceRules)
+        private List<Product> _availableItems;
+
+        public Checkout(ICheckoutFactory checkoutFactory)
         {
-            _itemPriceRules = itemPriceRules;
             _scannedItems = new List<string>();
+            _itemPriceRules = checkoutFactory.CreateCheckout();
+        }
+
+        public List<Product> DisplayAvailableItems()
+        {
+            _availableItems = new List<Product>
+            {
+                new Product{
+                Sku = "A99",
+                Description = "Apple",
+                UnitPrice = 0.50m
+                },
+                new Product
+                {
+                    Sku = "B15",
+                    Description = "Biscuit",
+                    UnitPrice = 0.30m
+                }
+                ,
+                new Product
+                {
+                    Sku = "C40",
+                    Description = "Coffee",
+                    UnitPrice = 1.80m
+                }
+                ,
+                new Product
+                {
+                    Sku = "T23",
+                    Description = "Tissues",
+                    UnitPrice = 0.99m
+                }
+            };
+
+            return _availableItems;
         }
 
         public void ScanItem(string item)
         {
-            _scannedItems.Add(item);
+            if(_availableItems.Count(x => x.Sku==item) > 0)
+                _scannedItems.Add(item);
+        }
+
+        public List<string> BasketItems()
+        {
+            string basketItems = @"SKU: {0} - Description: {1} - Unit Price: {2}";
+
+
+            return _scannedItems;
         }
 
         public decimal CalculateTotalPrice()
@@ -34,7 +81,7 @@ namespace SuperMarket.Service
             }
 
             if(itemsLeft.Count !=0)
-                throw new ApplicationException("Invalid items: "+string.Join(", ",itemsLeft));
+                throw new ApplicationException("Invalid items: "+string.Join(", ", itemsLeft));
 
             return total;
         }

@@ -5,14 +5,14 @@ using SuperMarket.Rules.ItemPriceRules;
 
 namespace SuperMarket.Rules.Factory
 {
-    public class ItemPriceRuleFactory
+    public class ItemPriceRuleFactory : IItemPriceRuleFactory
     {
         public IReadOnlyList<IItemPriceRule> GetAllItemPriceRules()
         {
             var rules = new List<IItemPriceRule>
             {
-                CreateThreeAItemPriceRule(),
-                CreateTwoBItemPriceRule()
+                CreateThreeAItemSpecialOfferRule(),
+                CreateTwoBItemSpecialOfferRule()
             };
 
             rules.AddRange(CreateSingleItemPriceRules());
@@ -25,12 +25,12 @@ namespace SuperMarket.Rules.Factory
             return ItemCodePriceMap.Select(map => new SingleItemPriceRule(map.Key, map.Value));
         }
 
-        private IItemPriceRule CreateThreeAItemPriceRule()
+        private IItemPriceRule CreateThreeAItemSpecialOfferRule()
         {
             return new MultipleItemPriceRule("A99", 1.30m, 3);
         }
 
-        private IItemPriceRule CreateTwoBItemPriceRule()
+        private IItemPriceRule CreateTwoBItemSpecialOfferRule()
         {
             return new MultipleItemPriceRule("B15", 0.45m, 2);
         }

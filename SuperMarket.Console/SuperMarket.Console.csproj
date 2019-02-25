@@ -9,4 +9,8 @@
     <ProjectReference Include="..\SuperMarket.Service\SuperMarket.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.dependencyinjection" Version="2.2.0" />
+  </ItemGroup>
+
 </Project>
