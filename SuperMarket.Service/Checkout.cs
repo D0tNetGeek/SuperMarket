@@ -24,7 +24,8 @@ namespace SuperMarket.Service
             _scannedItems = new List<string>();
             _checkoutFactory = checkoutFactory;
             _superMarketRepo = superMarketRepo;
-            _itemPriceRules = _checkoutFactory.CreateCheckout();
+
+            //_itemPriceRules = itemPriceRules; //_checkoutFactory.CreateCheckout();
         }
 
         public List<Product> DisplayAvailableItems()
@@ -41,7 +42,7 @@ namespace SuperMarket.Service
 
         public void ScanItem(string item)
         {
-            if(_availableItems.Count(x => x.Sku==item) > 0)
+            //if(_availableItems.Count(x => x.Sku==item) > 0)
                 _scannedItems.Add(item);
         }
 
@@ -61,7 +62,7 @@ namespace SuperMarket.Service
 
             var itemsLeft = new List<string>(_scannedItems);
 
-            foreach (var itemPriceRule in _itemPriceRules)
+            foreach (var itemPriceRule in  _checkoutFactory.CreateCheckout()) //; _itemPriceRules)
             {
                 total += itemPriceRule.CalculatePrice(itemsLeft);
             }

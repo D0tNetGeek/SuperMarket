@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SuperMarket.Repository;
-using SuperMarket.Rules.Factory;
 using SuperMarket.Rules.Interfaces;
+using SuperMarket.Rules.ItemPriceRules;
 using SuperMarket.Service.Entities;
 using SuperMarket.Service.Interfaces;
 
@@ -21,7 +22,6 @@ namespace SuperMarket.Service.Tests.Checkout
         {
             _repo = new Mock<ISuperMarketData>();
             _checkoutFactory = new Mock<ICheckoutFactory>();
-            _checkout = new Service.Checkout(_checkoutFactory.Object, _repo.Object);
         }
 
         [TestMethod]
@@ -43,12 +43,15 @@ namespace SuperMarket.Service.Tests.Checkout
         public void ScanSingleItemAndReturnTotalPrice()
         {
             //Arrange
-            var product = new Product {Sku = "A99"};
+            var product = new Product {Sku = "A99", UnitPrice = .50m};
             var expectedPrice = .50m;
 
             //Act
-            _checkout.BasketItems();
-            _checkoutFactory.Setup(x => x.CreateCheckout()).Returns(Mock.Of<List<IItemPriceRule>>);
+            _checkoutFactory.Setup(x => x.CreateCheckout()).Returns(new List<IItemPriceRule>
+            {
+                new SingleItemPriceRule(product.Sku, product.UnitPrice)
+            });
+
             _repo.Setup(x => x.DisplayAvailableItems()).Returns(new List<ProductDto>
             {
                 new ProductDto
@@ -57,6 +60,9 @@ namespace SuperMarket.Service.Tests.Checkout
                     UnitPrice = 0.50m
                 }
             });
+
+
+            _checkout = new Service.Checkout(_checkoutFactory.Object, _repo.Object);
 
             _checkout.ScanItem(product.Sku);
 
@@ -69,47 +75,131 @@ namespace SuperMarket.Service.Tests.Checkout
         [TestMethod]
         public void ScanMultipleThreeAItemsReturnsTotalPrice()
         {
+            //Arrange
+            var products = new List<Product>
+            {
+                new Product{ Sku = "A99", UnitPrice = .50m },
+                new Product{ Sku = "A99", UnitPrice = .50m },
+                new Product{ Sku = "A99", UnitPrice = .50m }
+            };
+
             var expectedPrice = 1.30m;
-            var checkout = CreateCheckout();
 
-            //checkout.Scan("A99");
-            //checkout.Scan("A99");
-            //checkout.Scan("A99");
+            //Act
+            _checkoutFactory.Setup(x => x.CreateCheckout()).Returns(new List<IItemPriceRule>
+            {
+                new MultipleItemPriceRule("A99", 1.30m, 3)
+            });
 
-            //var actualPrice = checkout.CalculateTotalPrice();
+            _repo.Setup(x => x.DisplayAvailableItems()).Returns(new List<ProductDto>
+            {
+                new ProductDto
+                {
+                    Sku = "A99",
+                    UnitPrice = 0.50m
+                }
+            });
 
-            //Assert.AreEqual(expectedPrice, actualPrice);
+
+            _checkout = new Service.Checkout(_checkoutFactory.Object, _repo.Object);
+
+            foreach (var item in products)
+            {
+                _checkout.ScanItem(item.Sku);
+            }
+            
+
+            var actualPrice = _checkout.CalculateTotalPrice();
+
+            //Assert
+            Assert.AreEqual(expectedPrice, actualPrice);
         }
 
         [TestMethod]
         public void ScanMutlipleTwoBItemsReturnsTotalPrice()
         {
-            var expectedPrice = 4.5m;
-            var checkout = CreateCheckout();
+            //Arrange
+            var products = new List<Product>
+            {
+                new Product{ Sku = "B15", UnitPrice = .30m },
+                new Product{ Sku = "B15", UnitPrice = .30m }
+            };
 
-            //checkout.Scan("B15");
-            //checkout.Scan("B15");
+            var expectedPrice = 0.45m;
 
-            //var actualPrice = checkout.CalculateTotalPrice();
+            //Act
+            _checkoutFactory.Setup(x => x.CreateCheckout()).Returns(new List<IItemPriceRule>
+            {
+                new MultipleItemPriceRule("B15", .45m, 2)
+            });
 
-            //Assert.AreEqual(expectedPrice, actualPrice);
+            _repo.Setup(x => x.DisplayAvailableItems()).Returns(new List<ProductDto>
+            {
+                new ProductDto
+                {
+                    Sku = "B15",
+                    UnitPrice = 0.30m
+                }
+            });
+
+
+            _checkout = new Service.Checkout(_checkoutFactory.Object, _repo.Object);
+
+            foreach (var item in products)
+            {
+                _checkout.ScanItem(item.Sku);
+            }
+
+
+            var actualPrice = _checkout.CalculateTotalPrice();
+
+            //Assert
+            Assert.AreEqual(expectedPrice, actualPrice);
         }
 
         [TestMethod]
         public void ScanThreeAandTwoBItemsReturnsTotalPrice()
         {
+            //Arrange
+            var products = new List<Product>
+            {
+                new Product{ Sku = "A99", UnitPrice = .50m },
+                new Product{ Sku = "A99", UnitPrice = .50m },
+                new Product{ Sku = "A99", UnitPrice = .50m },
+                new Product{ Sku = "B15", UnitPrice = .30m },
+                new Product{ Sku = "B15", UnitPrice = .30m }
+            };
+
             var expectedPrice = 1.75m;
-            var checkout = CreateCheckout();
 
-            //checkout.Scan("A99");
-            //checkout.Scan("A99");
-            //checkout.Scan("A99");
-            //checkout.Scan("B15");
-            //checkout.Scan("B15");
+            //Act
+            _checkoutFactory.Setup(x => x.CreateCheckout()).Returns(new List<IItemPriceRule>
+            {
+                new MultipleItemPriceRule("B15", .45m, 2)
+            });
 
-            //var actualPrice = checkout.CalculateTotalPrice();
+            _repo.Setup(x => x.DisplayAvailableItems()).Returns(new List<ProductDto>
+            {
+                new ProductDto{ Sku = "A99", UnitPrice = .50m },
+                new ProductDto{ Sku = "A99", UnitPrice = .50m },
+                new ProductDto{ Sku = "A99", UnitPrice = .50m },
+                new ProductDto{ Sku = "B15", UnitPrice = .30m },
+                new ProductDto{ Sku = "B15", UnitPrice = .30m }
+            });
 
-            //Assert.AreEqual(expectedPrice, actualPrice);
+
+            _checkout = new Service.Checkout(_checkoutFactory.Object, _repo.Object);
+
+            foreach (var item in products)
+            {
+                _checkout.ScanItem(item.Sku);
+            }
+
+
+            var actualPrice = _checkout.CalculateTotalPrice();
+
+            //Assert
+            Assert.AreEqual(expectedPrice, actualPrice);
         }
 
         [TestMethod]

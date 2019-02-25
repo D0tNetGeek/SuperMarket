@@ -14,7 +14,6 @@ namespace SuperMarket.Service.Tests.CheckoutFactory
         private ICheckoutFactory _factory;
         private Mock<IItemPriceRuleFactory> _itemPriceRuleFactory;
         private Mock<ISuperMarketData> _repo;
-        private ICheckoutFactory _service;
         private List<ProductDto> _products;
 
         [TestInitialize]
@@ -22,9 +21,7 @@ namespace SuperMarket.Service.Tests.CheckoutFactory
         {
             _repo = new Mock<ISuperMarketData>();
             _itemPriceRuleFactory = new Mock<IItemPriceRuleFactory>();
-            //_factory = new Factory.CheckoutFactory(_itemPriceRuleFactory.Object, _repo.Object);
-
-            _service = new Factory.CheckoutFactory(_itemPriceRuleFactory.Object, _repo.Object);
+            _factory = new Factory.CheckoutFactory(_itemPriceRuleFactory.Object, _repo.Object);
 
             _products = new List<ProductDto>
             {
@@ -40,7 +37,7 @@ namespace SuperMarket.Service.Tests.CheckoutFactory
         {
             _repo.Setup(r => r.DisplayAvailableItems()).Returns(_products);
 
-            var results = _service.GetAvailableItems();
+            var results = _factory.GetAvailableItems();
 
             Assert.IsNotNull(results);
             Assert.AreEqual(_products.Count, results.Count);
