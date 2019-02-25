@@ -27,6 +27,9 @@ Contains simple menu based console which implements service. Also implemented DI
 <li><strong>SuperMarket.Repository</strong></li>
 Contains the Repository that holds temporary supermarket data. Can be extended to connect to real time database.</br></br>
 
+<li><strong>SuperMarket.Repository.Tests</strong></li>
+Contains the tests for Repository class.</br></br>
+
 <li><strong>SuperMarket.Rules</strong></li>
 Contains Business rules for super market to implement special offers. At the moment it implements single and multiple buy. Can be extended to change current business rules or to add new business rules.</br></br>
 
@@ -34,7 +37,7 @@ Contains Business rules for super market to implement special offers. At the mom
 Contains Service that implements business rules using a factory classes.</br></br>
 
 <li><strong>SuperMarket.Service.Tests</strong></li>
-Contains Tests for service class.</br></br>
+Contains Tests for service and factory class.</br></br>
 
 <h2>Setup</h2>
 <p>NodeJS must be installed on your system if you are planning to use VS code.</p>
