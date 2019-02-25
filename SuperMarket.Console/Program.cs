@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using SuperMarket.Repository;
 using SuperMarket.Rules.Factory;
 using SuperMarket.Rules.Interfaces;
 using SuperMarket.Service;
@@ -18,37 +19,51 @@ namespace SuperMarket.Console
                 .AddSingleton<ICheckout, Checkout>()
                 .AddSingleton<ICheckoutFactory,CheckoutFactory>()
                 .AddSingleton<IItemPriceRuleFactory, ItemPriceRuleFactory>()
+                .AddSingleton<ISuperMarketData, SuperMarketData>()
                 .BuildServiceProvider();
 
             var checkoutService = serviceProvider.GetService<ICheckout>();
-            //var checkoutFactory = serviceProvider.GetService<ICheckoutFactory>();
 
             int userInput = 0;
+            bool isValid = true;
 
             do
             {
+                isValid = true;
+
                 userInput = DisplayMenu();
 
                 switch (userInput)
                 {
                     case 1:
                         //Display available items.
+
+                        System.Console.Clear();
+
                         var availableItems = checkoutService.DisplayAvailableItems();
 
-                        System.Console.WriteLine("ProductId" + "\t" + "SKU" + "\t" + "Description" + "\t" + "Unit Price");
-                        System.Console.WriteLine("-------------------------------------------------");
+                        System.Console.WriteLine("\t\t\t---------------------------------------------------");
+                        System.Console.WriteLine("\t\t\t                Available Items                  ");
+                        System.Console.WriteLine("\t\t\t---------------------------------------------------");
+                        System.Console.WriteLine();
+                        System.Console.WriteLine("\t\t\tProductId" + "\t" + "SKU" + "\t" + "Description" + "\t" + "Unit Price");
+                        System.Console.WriteLine("\t\t\t--------------------------------------------------");
 
                         int i = 0;
                         foreach (var item in availableItems)
                         {
                             i++;
-                            System.Console.WriteLine(i+ "\t\t" + item.Sku + "\t" + item.Description + "\t\t" + item.UnitPrice);
+                            System.Console.WriteLine("\t\t\t" + i+ "\t\t" + item.Sku + "\t" + item.Description + "\t\t" + item.UnitPrice);
                         }
+
+                        System.Console.WriteLine();
+
                         break;
 
                     case 2:
                         //Accept an item.
-                        System.Console.WriteLine("Enter the sku you want to purchase");
+
+                        System.Console.Write("\t\t\tEnter the sku you want to purchase: ");
 
                         var sku = System.Console.ReadLine();
 
@@ -58,12 +73,19 @@ namespace SuperMarket.Console
 
                     case 3:
                         //Checkout basket and return total price.
+
+                        System.Console.Clear();
+
                         var totalPrice = checkoutService.CalculateTotalPrice();
 
-                        System.Console.WriteLine("Items in the basket : " + string.Join(", ", checkoutService.BasketItems()));
+                        System.Console.WriteLine("\t\t\tItems in the basket : " + string.Join(", ", checkoutService.BasketItems()));
 
-                        System.Console.WriteLine("The Total Price for the Basket is: "+ totalPrice);
+                        System.Console.WriteLine("\t\t\tThe Total Price for the Basket is: " + totalPrice);
 
+                        break;
+
+                    default:
+                        isValid = false;
                         break;
 
                 }
@@ -81,16 +103,20 @@ namespace SuperMarket.Console
             System.Console.WriteLine("{0," + ((System.Console.WindowWidth / 2) + (("4. Exit                                     ").Length / 2)) + "}", "4. Exit                                   ");
             System.Console.WriteLine("{0," + ((System.Console.WindowWidth / 2) + (("--------------------------------------------").Length / 2)) + "}", "------------------------------------------");
 
-            var result = System.Console.ReadLine();
+            System.Console.WriteLine();
+            System.Console.Write("{0," + ((System.Console.WindowWidth / 2) + (("Enter your menu choice: ").Length / 2)) + "}", "Enter your menu choice: ");
 
-            if (string.IsNullOrEmpty(result) || Convert.ToInt32(result) > 4)
+            var result = Int32.TryParse(System.Console.ReadLine(), out var input);
+
+            if(!result || input > 4)
             {
-                System.Console.WriteLine("You have entered an invalid menu option, press any key to continue again...");
+                System.Console.WriteLine();
+                System.Console.WriteLine("{0," + ((System.Console.WindowWidth / 2) + (("You have entered an invalid menu option, press any key to continue again...").Length / 2)) + "}", "You have entered an invalid menu option, press any key to continue again...");
+                System.Console.ReadKey();
                 System.Console.Clear();
-                DisplayMenu();
             }
 
-            return Convert.ToInt32(result);
+            return input;
         }
     }
 }

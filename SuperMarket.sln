@@ -5,11 +5,13 @@ VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperMarket.Service", "SuperMarket.Service\SuperMarket.Service.csproj", "{4520FDAA-0E00-4DE9-A160-B9FF69A9B143}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperMarket.Service.Tests", "SuperMarket.Service.Tests\SuperMarket.Service.Tests.csproj", "{987E7821-9BD7-44B8-A762-9C84BB892D37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperMarket.Service.Tests", "SuperMarket.Service.Tests\SuperMarket.Service.Tests.csproj", "{987E7821-9BD7-44B8-A762-9C84BB892D37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperMarket.Console", "SuperMarket.Console\SuperMarket.Console.csproj", "{41E07EDF-B346-4BEB-849D-196EFE96ADC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperMarket.Console", "SuperMarket.Console\SuperMarket.Console.csproj", "{41E07EDF-B346-4BEB-849D-196EFE96ADC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperMarket.Rules", "SuperMarket.Rules\SuperMarket.Rules.csproj", "{F2F6406B-DACE-4935-9BB1-276FDB759B70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperMarket.Rules", "SuperMarket.Rules\SuperMarket.Rules.csproj", "{F2F6406B-DACE-4935-9BB1-276FDB759B70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperMarket.Repository", "SuperMarket.Repository\SuperMarket.Repository.csproj", "{D00301E8-B381-461A-8452-AF3605D2A8CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{F2F6406B-DACE-4935-9BB1-276FDB759B70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2F6406B-DACE-4935-9BB1-276FDB759B70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2F6406B-DACE-4935-9BB1-276FDB759B70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D00301E8-B381-461A-8452-AF3605D2A8CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D00301E8-B381-461A-8452-AF3605D2A8CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D00301E8-B381-461A-8452-AF3605D2A8CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D00301E8-B381-461A-8452-AF3605D2A8CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

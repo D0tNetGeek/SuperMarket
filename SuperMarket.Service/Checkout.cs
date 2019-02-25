@@ -15,43 +15,19 @@ namespace SuperMarket.Service
 
         private List<Product> _availableItems;
 
+        private readonly ICheckoutFactory _checkoutFactory;
+
         public Checkout(ICheckoutFactory checkoutFactory)
         {
             _scannedItems = new List<string>();
-            _itemPriceRules = checkoutFactory.CreateCheckout();
+            _checkoutFactory = checkoutFactory;
+            _itemPriceRules = _checkoutFactory.CreateCheckout();
         }
 
         public List<Product> DisplayAvailableItems()
         {
-            _availableItems = new List<Product>
-            {
-                new Product{
-                Sku = "A99",
-                Description = "Apple",
-                UnitPrice = 0.50m
-                },
-                new Product
-                {
-                    Sku = "B15",
-                    Description = "Biscuit",
-                    UnitPrice = 0.30m
-                }
-                ,
-                new Product
-                {
-                    Sku = "C40",
-                    Description = "Coffee",
-                    UnitPrice = 1.80m
-                }
-                ,
-                new Product
-                {
-                    Sku = "T23",
-                    Description = "Tissues",
-                    UnitPrice = 0.99m
-                }
-            };
-
+            _availableItems = _checkoutFactory.GetAvailableItems();
+           
             return _availableItems;
         }
 
@@ -63,9 +39,6 @@ namespace SuperMarket.Service
 
         public List<string> BasketItems()
         {
-            string basketItems = @"SKU: {0} - Description: {1} - Unit Price: {2}";
-
-
             return _scannedItems;
         }
 

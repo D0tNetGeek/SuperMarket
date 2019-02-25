@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SuperMarket.Rules.Interfaces;
+using SuperMarket.Service.Entities;
 using SuperMarket.Service.Interfaces;
 
 namespace SuperMarket.Service.Factory
@@ -18,11 +19,14 @@ namespace SuperMarket.Service.Factory
         {
             var itemPriceRules = _itemPriceRuleFactory.GetAllItemPriceRules();
 
-            //var checkout = new Checkout(itemPriceRules);
-
-            //return checkout;
-
             return itemPriceRules.ToList();
+        }
+
+        public List<Product> GetAvailableItems()
+        {
+            var availableItems = _itemPriceRuleFactory.GetAvailableItems();
+
+            return availableItems.Select(x => new Product {Sku = x.Key, UnitPrice = x.Value}).ToList();
         }
     }
 }
