@@ -1,4 +1,4 @@
-<h1>SuperMarket Checkout Test for Degree53</h1>
+<h1>SuperMarket Checkout for Degree53</h1>
 
 <p>Create a simple C# client and service for a supermarket checkout basket total.</p>
 
