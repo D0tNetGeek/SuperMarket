@@ -13,7 +13,7 @@ namespace SuperMarket.Service.Tests.Checkout
     [TestClass]
     public class CheckoutTest
     {
-        private ICheckout  _checkout;
+        private ICheckout _checkout;
         private Mock<ICheckoutFactory> _checkoutFactory;
         private Mock<ISuperMarketData> _repo;
 
@@ -30,7 +30,11 @@ namespace SuperMarket.Service.Tests.Checkout
             //Arrage
 
             //Act
+            _checkoutFactory.Setup(x => x.CreateCheckout()).Returns(Mock.Of<List<IItemPriceRule>>);
+
             _repo.Setup(x => x.DisplayAvailableItems()).Returns(Mock.Of<List<ProductDto>>);
+
+            _checkout = new Service.Checkout(_checkoutFactory.Object, _repo.Object);
 
             var results = _checkout.DisplayAvailableItems();
 
@@ -78,9 +82,9 @@ namespace SuperMarket.Service.Tests.Checkout
             //Arrange
             var products = new List<Product>
             {
-                new Product{ Sku = "A99", UnitPrice = .50m },
-                new Product{ Sku = "A99", UnitPrice = .50m },
-                new Product{ Sku = "A99", UnitPrice = .50m }
+                new Product {Sku = "A99", UnitPrice = .50m},
+                new Product {Sku = "A99", UnitPrice = .50m},
+                new Product {Sku = "A99", UnitPrice = .50m}
             };
 
             var expectedPrice = 1.30m;
@@ -107,7 +111,7 @@ namespace SuperMarket.Service.Tests.Checkout
             {
                 _checkout.ScanItem(item.Sku);
             }
-            
+
 
             var actualPrice = _checkout.CalculateTotalPrice();
 
@@ -121,8 +125,8 @@ namespace SuperMarket.Service.Tests.Checkout
             //Arrange
             var products = new List<Product>
             {
-                new Product{ Sku = "B15", UnitPrice = .30m },
-                new Product{ Sku = "B15", UnitPrice = .30m }
+                new Product {Sku = "B15", UnitPrice = .30m},
+                new Product {Sku = "B15", UnitPrice = .30m}
             };
 
             var expectedPrice = 0.45m;
@@ -163,11 +167,11 @@ namespace SuperMarket.Service.Tests.Checkout
             //Arrange
             var products = new List<Product>
             {
-                new Product{ Sku = "A99", UnitPrice = .50m },
-                new Product{ Sku = "A99", UnitPrice = .50m },
-                new Product{ Sku = "A99", UnitPrice = .50m },
-                new Product{ Sku = "B15", UnitPrice = .30m },
-                new Product{ Sku = "B15", UnitPrice = .30m }
+                new Product {Sku = "A99", UnitPrice = .50m},
+                new Product {Sku = "A99", UnitPrice = .50m},
+                new Product {Sku = "A99", UnitPrice = .50m},
+                new Product {Sku = "B15", UnitPrice = .30m},
+                new Product {Sku = "B15", UnitPrice = .30m}
             };
 
             var expectedPrice = 1.75m;
@@ -175,16 +179,17 @@ namespace SuperMarket.Service.Tests.Checkout
             //Act
             _checkoutFactory.Setup(x => x.CreateCheckout()).Returns(new List<IItemPriceRule>
             {
+                new MultipleItemPriceRule("A99", 1.3m, 3),
                 new MultipleItemPriceRule("B15", .45m, 2)
             });
 
             _repo.Setup(x => x.DisplayAvailableItems()).Returns(new List<ProductDto>
             {
-                new ProductDto{ Sku = "A99", UnitPrice = .50m },
-                new ProductDto{ Sku = "A99", UnitPrice = .50m },
-                new ProductDto{ Sku = "A99", UnitPrice = .50m },
-                new ProductDto{ Sku = "B15", UnitPrice = .30m },
-                new ProductDto{ Sku = "B15", UnitPrice = .30m }
+                new ProductDto {Sku = "A99", UnitPrice = .50m},
+                new ProductDto {Sku = "A99", UnitPrice = .50m},
+                new ProductDto {Sku = "A99", UnitPrice = .50m},
+                new ProductDto {Sku = "B15", UnitPrice = .30m},
+                new ProductDto {Sku = "B15", UnitPrice = .30m}
             });
 
 
@@ -205,26 +210,47 @@ namespace SuperMarket.Service.Tests.Checkout
         [TestMethod]
         public void ScanThreeAAndTwoBItemsNotInOrderReturnsTotalPrice()
         {
+            //Arrange
+            var products = new List<Product>
+            {
+                new Product {Sku = "A99", UnitPrice = .50m},
+                new Product {Sku = "B15", UnitPrice = .30m},
+                new Product {Sku = "A99", UnitPrice = .50m},
+                new Product {Sku = "B15", UnitPrice = .30m},
+                new Product {Sku = "A99", UnitPrice = .50m},
+            };
+
             var expectedPrice = 1.75m;
-            var checkout = CreateCheckout();
 
-            //checkout.Scan("A99");
-            //checkout.Scan("B15");
-            //checkout.Scan("A99");
-            //checkout.Scan("B15");
-            //checkout.Scan("A99");
+            //Act
+            _checkoutFactory.Setup(x => x.CreateCheckout()).Returns(new List<IItemPriceRule>
+            {
+                new MultipleItemPriceRule("A99", 1.3m, 3),
+                new MultipleItemPriceRule("B15", .45m, 2)
+            });
 
-            //var actualPrice = checkout.CalculateTotalPrice();
+            _repo.Setup(x => x.DisplayAvailableItems()).Returns(new List<ProductDto>
+            {
+                new ProductDto {Sku = "A99", UnitPrice = .50m},
+                new ProductDto {Sku = "A99", UnitPrice = .50m},
+                new ProductDto {Sku = "A99", UnitPrice = .50m},
+                new ProductDto {Sku = "B15", UnitPrice = .30m},
+                new ProductDto {Sku = "B15", UnitPrice = .30m}
+            });
 
-            //Assert.AreEqual(expectedPrice, actualPrice);
-        }
 
-        private static List<IItemPriceRule> CreateCheckout()
-        {
-            var itemrule = new Mock<IItemPriceRuleFactory>();
-            var repo = new Mock<ISuperMarketData>();
+            _checkout = new Service.Checkout(_checkoutFactory.Object, _repo.Object);
 
-            return new Factory.CheckoutFactory(itemrule.Object, repo.Object).CreateCheckout();
+            foreach (var item in products)
+            {
+                _checkout.ScanItem(item.Sku);
+            }
+
+
+            var actualPrice = _checkout.CalculateTotalPrice();
+
+            //Assert
+            Assert.AreEqual(expectedPrice, actualPrice);
         }
     }
 }
